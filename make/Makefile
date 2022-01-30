@@ -17,6 +17,7 @@ REGISTRY_HOST=docker.io
 USERNAME=$(USER)
 NAME=$(shell basename $(CURDIR))
 PLATFORMS=linux/amd64,linux/arm64
+LOADPLATFORM=linux/amd64
 
 RELEASE_SUPPORT := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))/.make-release-support
 IMAGE=$(USERNAME)/$(NAME)
@@ -48,17 +49,9 @@ post-push:
 
 
 docker-build: .release
-	docker buildx build --platform=${PLATFORMS} $(DOCKER_BUILD_ARGS) -t $(IMAGE):$(VERSION) $(DOCKER_BUILD_CONTEXT) -f $(DOCKER_FILE_PATH)
-	@DOCKER_MAJOR=$(shell docker -v | sed -e 's/.*version //' -e 's/,.*//' | cut -d\. -f1) ; \
-	DOCKER_MINOR=$(shell docker -v | sed -e 's/.*version //' -e 's/,.*//' | cut -d\. -f2) ; \
-	if [ $$DOCKER_MAJOR -eq 1 ] && [ $$DOCKER_MINOR -lt 10 ] ; then \
-		echo docker tag -f $(IMAGE):$(VERSION) $(IMAGE):latest ;\
-		docker tag -f $(IMAGE):$(VERSION) $(IMAGE):latest ;\
-	else \
-		echo docker tag $(IMAGE):$(VERSION) $(IMAGE):latest ;\
-		docker tag $(IMAGE):$(VERSION) $(IMAGE):latest ; \
-	fi
-
+	docker buildx build --platform=${PLATFORMS} $(DOCKER_BUILD_ARGS) -t $(IMAGE):$(VERSION) -t $(IMAGE):latest $(DOCKER_BUILD_CONTEXT) -f $(DOCKER_FILE_PATH)
+docker-load: .release
+	docker buildx build --platform=${LOADPLATFORM} $(DOCKER_BUILD_ARGS) -t $(IMAGE):$(VERSION) -t $(IMAGE):latest $(DOCKER_BUILD_CONTEXT) -f $(DOCKER_FILE_PATH) --load
 .release:
 	@echo "release=0.0.0" > .release
 	@echo "tag=$(NAME)-0.0.0" >> .release
@@ -72,9 +65,7 @@ release: check-status check-release build push
 push: pre-push do-push post-push 
 
 do-push: 
-	docker push $(IMAGE):$(VERSION)
-	docker push $(IMAGE):latest
-
+	docker buildx build --platform=${PLATFORMS} $(DOCKER_BUILD_ARGS) -t $(IMAGE):$(VERSION) -t $(IMAGE):latest $(DOCKER_BUILD_CONTEXT) -f $(DOCKER_FILE_PATH) --push
 snapshot: build push
 
 showver: .release
