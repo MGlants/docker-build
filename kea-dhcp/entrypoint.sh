@@ -15,5 +15,13 @@ if [ -e "${RUNPATH}/kea-ctrl-agent.kea-ctrl-agent.pid" ]; then
 fi
 
 keactrl start -c /etc/kea/keactrl.conf
-
+sleep 10
+set +e +u
+if [[ -e /tmp/kea-dhcp4-ctrl.sock ]] && [[ -e /tmp/kea-dhcp6-ctrl.sock ]];then
+  python3 /usr/local/bin/kea-exporter /tmp/kea-dhcp4-ctrl.sock /tmp/kea-dhcp4-ctrl.sock
+elif [[ -e /tmp/kea-dhcp4-ctrl.sock ]];then
+  python3 /usr/local/bin/kea-exporter /tmp/kea-dhcp4-ctrl.sock
+elif [[ -e /tmp/kea-dhcp6-ctrl.sock ]];then
+  python3 /usr/local/bin/kea-exporter /tmp/kea-dhcp4-ctrl.sock
+fi
 tail -f /dev/null

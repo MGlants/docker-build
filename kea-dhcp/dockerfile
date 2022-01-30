@@ -121,25 +121,28 @@ RUN rm -rf /tmp/root/var/run /tmp/root/usr/local/share/man/* /tmp/root/usr/local
            /tmp/root/usr/local/lib/*.la /tmp/root/usr/local/include/*
 
 
-# Intermediate container with runtime dependencies
-FROM alpine:3.13 AS runtime
 
-# Install runtime dependencies
-ARG RUN_PKGS="libgcc libstdc++ boost-system mariadb-connector-c libpq tzdata procps libatomic tini sqlite-libs \
-              libbz2 cassandra-cpp-driver "
-COPY --from=log4cplus /tmp/root /
-COPY --from=botan /tmp/root /
-RUN apk add --update --no-cache ${RUN_PKGS} \
-    && rm -rf /var/cache/apk/* /usr/local/share/man/* \
-    && mkdir -p /var/lib/kea
 # Intermediate container with runtime dependencies
 FROM python:alpine3.13 as exporter
 RUN mkdir /install
 WORKDIR /install
 RUN pip3 install --target="/install" kea-exporter
 
+# Intermediate container with runtime dependencies
+FROM alpine:3.13 AS runtime
+
+# Install runtime dependencies
+ARG RUN_PKGS="libgcc libstdc++ boost-system mariadb-connector-c libpq tzdata procps libatomic tini sqlite-libs \
+              libbz2 cassandra-cpp-driver python3 "
+COPY --from=log4cplus /tmp/root /
+COPY --from=botan /tmp/root /
+RUN apk add --update --no-cache ${RUN_PKGS} \
+    && rm -rf /var/cache/apk/* /usr/local/share/man/* \
+    && mkdir -p /var/lib/kea
+
 # Final container
 FROM runtime
+ENV PYTHONPATH "${PYTHONPATH}:/usr/local"
 LABEL maintainer="MGlants <mark@glants.xyz>" \
       CONTRIBUTORS="kometchtech <kometch@gmail.com>" \
       description="Kea is an open source implementation of the Dynamic Host Configuration \
@@ -150,7 +153,7 @@ LABEL maintainer="MGlants <mark@glants.xyz>" \
 ENV TZ UTC
 
 # publish port TCP and UDP
-EXPOSE 67/UDP 547/TCP 547/UDP 8080
+EXPOSE 67/UDP 547/TCP 547/UDP 8080 9547
 
 # service running
 STOPSIGNAL SIGTERM
