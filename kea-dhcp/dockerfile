@@ -80,7 +80,7 @@ RUN ldconfig /
 FROM base-image AS build
 
 # Environment
-ARG VERSION="1.6.0-beta"
+ARG VERSION="2.1.2"
 ARG BUILD_PKGS="boost-dev postgresql-dev mariadb-dev bison flex perl curl openssl-dev cassandra-cpp-driver-dev "
 ARG CFLAGS="-O2 -pthread -pipe -fPIC -fPIE -fomit-frame-pointer "
 ARG CXXFLAGS="${CFLAGS} "
