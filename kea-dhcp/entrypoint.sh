@@ -17,11 +17,11 @@ fi
 keactrl start -c /etc/kea/keactrl.conf
 sleep 10
 set +e +u
-if [[ -e /tmp/kea-dhcp4-ctrl.sock ]] && [[ -e /tmp/kea-dhcp6-ctrl.sock ]];then
-  python3 /usr/local/bin/kea-exporter /tmp/kea-dhcp4-ctrl.sock /tmp/kea-dhcp4-ctrl.sock
-elif [[ -e /tmp/kea-dhcp4-ctrl.sock ]];then
-  python3 /usr/local/bin/kea-exporter /tmp/kea-dhcp4-ctrl.sock
-elif [[ -e /tmp/kea-dhcp6-ctrl.sock ]];then
-  python3 /usr/local/bin/kea-exporter /tmp/kea-dhcp4-ctrl.sock
+if [[ -e /tmp/kea4-ctrl-socket ]] && [[ -e /tmp/kea6-ctrl-socket ]];then
+  python3 /usr/local/bin/kea-exporter /tmp/kea4-ctrl-socket /tmp/kea6-ctrl-socket
+elif [[ -e /tmp/kea4-ctrl-socket ]];then
+  python3 /usr/local/bin/kea-exporter /tmp/kea4-ctrl-socket
+elif [[ -e /tmp/kea6-ctrl-socket ]];then
+  python3 /usr/local/bin/kea-exporter /tmp/kea6-ctrl-socket
 fi
 tail -f /dev/null
