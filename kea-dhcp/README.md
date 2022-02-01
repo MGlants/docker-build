@@ -3,6 +3,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/smailkoz/kea-dhcp?logo=docker)](https://hub.docker.com/r/smailkoz/kea-dhcp)
 [![Github Package](https://img.shields.io/static/v1?label=MGlants&message=Github%20Package&color=blue&logo=github)](https://github.com/MGlants/docker-build/tree/main/kea-dhcp)
 ![Docker Image Size (latest)](https://img.shields.io/docker/image-size/smailkoz/kea-dhcp/latest?label=latest%20size)
+[![kea-dhcp chart version](https://img.shields.io/badge/dynamic/yaml?url=https://charts.glants.xyz/index.yaml&label=kea-dhcp&query=$.entries['kea-dhcp'][:1].version&color=277A9F&logo=helm)](https://artifacthub.io/packages/helm/mglants/kea-dhcp)
 
 Docker image for kea-dhcp with amd64 and arm64
 * Built specifically for [helm-chart](https://artifacthub.io/packages/helm/mglants/kea-dhcp) 
