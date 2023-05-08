@@ -10,6 +10,7 @@ on:
       - "!make/**"
       - "!Makefile"
       - "!*.md"
+      - "!metadata.json"
 jobs:
   get-changes:
     name: Collect changes
