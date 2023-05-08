@@ -8,6 +8,8 @@ on:
     paths:
       - "**/**"
       - "!make/**"
+      - "!Makefile"
+      - "!*.md"
 jobs:
   get-changes:
     name: Collect changes
