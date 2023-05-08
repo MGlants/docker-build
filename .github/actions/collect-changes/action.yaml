@@ -30,5 +30,5 @@ runs:
       shell: bash
       run: |
         PATHS='${{ steps.filter.outputs.addedOrModified_files }}'
-        OUTPUT=$(echo $PATHS | jq --raw-output -c 'map(. |= split("/")[1]) | unique')
+        OUTPUT=$(echo $PATHS | jq --raw-output -c 'map(. |= split("/")[0]) | unique')
         echo "addedOrModifiedImages=${OUTPUT}" >> $GITHUB_OUTPUT
