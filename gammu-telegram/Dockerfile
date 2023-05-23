@@ -1,7 +1,8 @@
 FROM alpine:latest
 RUN apk update && \
     apk add --no-cache gammu && \
-    apk add --no-cache gammu-smsd
+    apk add --no-cache gammu-smsd && \
+    apk add --no-cache usbutils
 
 RUN mkdir -p /var/spool/gammu/inbox \
     && mkdir -p /var/spool/gammu/outbox \
