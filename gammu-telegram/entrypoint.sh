@@ -1,2 +1,2 @@
 #!/bin/sh
-gammu-smsd -c /etc/gammurc
+gammu-smsd -c /etc/gammu-smsdrc
