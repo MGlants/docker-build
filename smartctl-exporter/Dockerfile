@@ -15,9 +15,12 @@ LABEL maintainer="The Prometheus Authors <prometheus-developers@googlegroups.com
 RUN apk add --no-cache smartmontools wget
 
 # Download and extract the smartctl_exporter binary
-RUN wget -O /bin/smartctl_exporter https://github.com/prometheus-community/smartctl_exporter/releases/download/v0.11.0/smartctl_exporter-0.11.0.${TARGETOS}-${TARGETARCH}.tar.gz \
-    && tar -xf /bin/smartctl_exporter -C /bin \
-    && chmod +x /bin/smartctl_exporter
+RUN wget -O /tmp/smartctl_exporter.tar.gz https://github.com/prometheus-community/smartctl_exporter/releases/download/v0.11.0/smartctl_exporter-0.11.0.${TARGETOS}-${TARGETARCH}.tar.gz \
+    && tar -xzf /tmp/smartctl_exporter.tar.gz -C /tmp \
+    && mv /tmp/smartctl_exporter-0.11.0.${TARGETOS}-${TARGETARCH}/smartctl_exporter /bin/smartctl_exporter \
+    && chmod +x /bin/smartctl_exporter \
+    && rm -r /tmp/smartctl_exporter-0.11.0.${TARGETOS}-${TARGETARCH} /tmp/smartctl_exporter.tar.gz
+
 
 # Expose the port for the smartctl_exporter
 EXPOSE 9633
