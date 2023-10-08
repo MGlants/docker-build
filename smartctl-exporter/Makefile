@@ -1,3 +1,3 @@
 include ../make/Makefile
 
-USERNAME=MGlants
+USERNAME=mglants

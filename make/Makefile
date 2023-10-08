@@ -13,14 +13,14 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 #
-REGISTRY_HOST=docker.io
+REGISTRY_HOST=ghcr.io
 USERNAME=$(USER)
 NAME=$(shell basename $(CURDIR))
 PLATFORMS=linux/amd64,linux/arm64
 LOADPLATFORM=linux/amd64
 
 RELEASE_SUPPORT := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))/.make-release-support
-IMAGE=$(USERNAME)/$(NAME)
+IMAGE=${REGISTRY_HOST}/$(USERNAME)/$(NAME)
 
 VERSION=$(shell . $(RELEASE_SUPPORT) ; getVersion)
 TAG=$(shell . $(RELEASE_SUPPORT); getTag)
